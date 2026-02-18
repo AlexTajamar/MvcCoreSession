@@ -3,17 +3,17 @@
 *@
 @{
     // Fix for CS8600: Use 'as' operator and null-check to avoid possible null conversion
-    Mascota? mascota = ViewData["MASCOTA"] as Mascota;
+    Mascota mascota = ViewData["MASCOTA"] as Mascota;
 }
 
 <h1>Session Mascota Bytes</h1>
 <!-- Fix for RZ1027, CS1003, CS1026: Add missing closing bracket and parenthesis -->
-<h3>@ViewData["Mensaje"]</h3>
+<h3>@ViewData["MENSAJE"]</h3>
 <p>
-    <a asp-controller="EjemploSession" asp-action="SessionSimple" asp-route-accion="almacenar">Almacenar</a>
+    <a asp-controller="EjemploSession" asp-action="SessionMascota" asp-route-accion="almacenar">Almacenar</a>
 </p>
 <p>
-    <a asp-controller="EjemploSession" asp-action="SessionSimple" asp-route-accion="mostrar">Mostrar</a>
+    <a asp-controller="EjemploSession" asp-action="SessionMascota" asp-route-accion="mostrar">Mostrar</a>
 </p>
 @if(mascota != null)
 {
@@ -21,6 +21,6 @@
     <h2>Raza: @mascota.Raza</h2>
     <h2>Edad: @mascota.Edad</h2>
 }
-)
+
 
 
