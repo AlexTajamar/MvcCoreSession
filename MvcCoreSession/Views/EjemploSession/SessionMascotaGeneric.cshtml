@@ -1,0 +1,26 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    // Fix for CS8600: Use 'as' operator and null-check to avoid possible null conversion
+    Mascota mascota = ViewData["MASCOTAGEN"] as Mascota;
+}
+
+<h1>Session Mascota Bytes</h1>
+<!-- Fix for RZ1027, CS1003, CS1026: Add missing closing bracket and parenthesis -->
+<h3>@ViewData["MENSAJE"]</h3>
+<p>
+    <a asp-controller="EjemploSession" asp-action="SessionMascotaGeneric" asp-route-accion="almacenar">Almacenar</a>
+</p>
+<p>
+    <a asp-controller="EjemploSession" asp-action="SessionMascotaGeneric" asp-route-accion="mostrar">Mostrar</a>
+</p>
+@if (mascota != null)
+{
+    <h2>Nombre: @mascota.Nombre</h2>
+    <h2>Raza: @mascota.Raza</h2>
+    <h2>Edad: @mascota.Edad</h2>
+}
+
+
+

@@ -1,8 +1,10 @@
 ﻿@using MvcCoreSession.Helpers
 @using System.Text.Json
-
+@model List<Mascota>
 @{
+    byte[] data = Context.Session.Get("MASCOTA");
     Mascota mascota = ViewData["MASCOTA"] as Mascota;
+    Mascota mascotaGen = ViewData["MASCOTAGEN"] as Mascota;
     
     Mascota mascotaJson = null;
     string mascotaJsonString = Context.Session.GetString("MASCOTA_JSON");
@@ -11,7 +13,7 @@
         mascotaJson = JsonSerializer.Deserialize<Mascota>(mascotaJsonString);
     }
 
-    byte[] data = Context.Session.Get("MASCOTA");
+   
     if (data != null)
     {
         mascota = HelperBinarySession.ByteObjeto(data) as Mascota;
@@ -26,6 +28,10 @@
     <li><a asp-controller="EjemploSession" asp-action="SessionMascota">Session Mascota</a></li>
     <li><a asp-controller="EjemploSession" asp-action="SessionMascotaCollection">Session Lista Mascota</a></li>
     <li><a asp-controller="EjemploSession" asp-action="SessionMascotaJson">Session Mascota Json</a></li>
+    <li><a asp-controller="EjemploSession" asp-action="SessionMascotaGeneric">Session Mascota Generic</a></li>
+    <li><a asp-controller="EjemploSession" asp-action="SessionMascotaCollectionGeneric">Session Mascota Generic</a></li>
+
+
 
 
 </ul>
@@ -45,4 +51,46 @@
     <h4 style="color:rebeccapurple">@mascotaJson.Raza</h4>
     <h4 style="color:rebeccapurple">@mascotaJson.Edad</h4>
 
+}
+
+@if (@Context.Session.GetString("MASCOTAGEN") != null)
+{
+
+    <h2>@Context.Session.GetString("MASCOTAGEN")</h2>
+
+}
+
+<h1>SessionAcessorList</h1>@if(Model != null){
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                modeEdad
+            </th>
+            <th>
+                Raza
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Edad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Raza)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MvcCoreSession.Extensions;
 using MvcCoreSession.Helpers;
 using MvcCoreSession.Models;
 using System;
@@ -8,6 +9,12 @@ namespace MvcCoreSession.Controllers
 {
     public class EjemploSessionController : Controller
     {
+        HelperSessionContextAccesor helper;
+
+        public EjemploSessionController(HelperSessionContextAccesor helper)
+        {
+            this.helper = helper;
+        }
         public IActionResult SessionSimple(string accion)
         {
             if (accion != null)
@@ -31,8 +38,8 @@ namespace MvcCoreSession.Controllers
 
         public IActionResult Index()
         {
-            
-            return View();
+            List<Mascota> mascotas = this.helper.GetMacotasSession();
+            return View(mascotas);
         }
 
         public IActionResult SessionMascota(string accion)
@@ -98,6 +105,31 @@ namespace MvcCoreSession.Controllers
             return View();
         }
 
+        public IActionResult SessionMascotaGeneric(string accion)
+        {
+            if (accion != null)
+            {
+                if (accion.ToLower() == "almacenar")
+                {
+                    Mascota mascota = new Mascota
+                    {
+                        Nombre = "ZeusGeneric",
+                        Edad = 5,
+                        Raza = "Husky"
+                    };
+
+                    HttpContext.Session.SetObject("MASCOTAGEN", mascota);
+                }
+
+                else if (accion.ToLower() == "mostrar")
+                {
+                    Mascota m = HttpContext.Session.GetObject<Mascota>("MASCOTAGEN");
+                    ViewData["MASCOTAGEN"] = m;
+                }
+            }
+            return View();
+        }
+
         public IActionResult SessionMascotaCollection(string accion)
         {
             if (accion != null)
@@ -115,7 +147,7 @@ namespace MvcCoreSession.Controllers
                     HttpContext.Session.Set("MASCOTAS", masByte);
                     ViewData["MENSAJE"] = "Mascotas almacenadas";
                 }
-                else if (string.Equals(accion, "mostrar", StringComparison.OrdinalIgnoreCase))
+                else if (accion.ToLower() == "mostrar")
                 {
                     byte[] data = HttpContext.Session.Get("MASCOTAS");
                     if (data != null)
@@ -127,6 +159,24 @@ namespace MvcCoreSession.Controllers
                 }
             }
             return View();
+        }
+
+        public IActionResult SessionMascotaCollectionGeneric()
+        {
+           
+                List<Mascota> mascotas = new List<Mascota>
+                    {
+                        new Mascota { Nombre = "Zeus", Edad = 5, Raza = "Husky" },
+                        new Mascota { Nombre = "Luna", Edad = 3, Raza = "Poodle" },
+                        new Mascota { Nombre = "Rocky", Edad = 4, Raza = "Bulldog" }
+                    };
+
+                    HttpContext.Session.SetObject("MASCOTAGENLIST", mascotas);
+                    List<Mascota> m = HttpContext.Session.GetObject<List<Mascota>>("MASCOTAGENLIST");
+                    ViewData["MASCOTAGENLIST"] = m;
+                    return View(m);
+
+           
         }
     }
 }

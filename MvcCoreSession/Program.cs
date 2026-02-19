@@ -1,7 +1,11 @@
+using MvcCoreSession.Helpers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<HelperSessionContextAccesor, HelperSessionContextAccesor>();
 //MEMORIA DISTRIBUIDA PARA QUE SESSION FUNCIONE
 builder.Services.AddDistributedMemoryCache();
 //CREAMOS UN SERVICIO DE SESSION
