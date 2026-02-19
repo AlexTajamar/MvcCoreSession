@@ -1,8 +1,22 @@
-﻿
-
+﻿@using MvcCoreSession.Helpers
+@using System.Text.Json
 
 @{
     Mascota mascota = ViewData["MASCOTA"] as Mascota;
+    
+    Mascota mascotaJson = null;
+    string mascotaJsonString = Context.Session.GetString("MASCOTA_JSON");
+    if (!string.IsNullOrEmpty(mascotaJsonString))
+    {
+        mascotaJson = JsonSerializer.Deserialize<Mascota>(mascotaJsonString);
+    }
+
+    byte[] data = Context.Session.Get("MASCOTA");
+    if (data != null)
+    {
+        mascota = HelperBinarySession.ByteObjeto(data) as Mascota;
+        ViewData["MASCOTA"] = mascota;
+    }
 }
 <h1>Ejemplos Session</h1>
 <h2 style="color:blue">nombre en SESION = @Context.Session.GetString("nombre")</h2>
@@ -11,6 +25,8 @@
     <li><a asp-controller="EjemploSession" asp-action="SessionSimple">Session Simple</a></li>
     <li><a asp-controller="EjemploSession" asp-action="SessionMascota">Session Mascota</a></li>
     <li><a asp-controller="EjemploSession" asp-action="SessionMascotaCollection">Session Lista Mascota</a></li>
+    <li><a asp-controller="EjemploSession" asp-action="SessionMascotaJson">Session Mascota Json</a></li>
+
 
 </ul>
 
@@ -19,4 +35,14 @@
     <h4 style="color:rebeccapurple">@mascota.Nombre</h4>
     <h4 style="color:rebeccapurple">@mascota.Raza</h4>
     <h4 style="color:rebeccapurple">@mascota.Edad</h4>
+}
+
+
+@if (mascotaJson != null)
+{
+
+    <h4 style="color:rebeccapurple">@mascotaJson.Nombre</h4>
+    <h4 style="color:rebeccapurple">@mascotaJson.Raza</h4>
+    <h4 style="color:rebeccapurple">@mascotaJson.Edad</h4>
+
 }

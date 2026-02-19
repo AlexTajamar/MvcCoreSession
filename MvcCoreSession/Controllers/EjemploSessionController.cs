@@ -31,12 +31,7 @@ namespace MvcCoreSession.Controllers
 
         public IActionResult Index()
         {
-            byte[]? data = HttpContext.Session.Get("MASCOTA");
-            if (data != null)
-            {
-                Mascota? mascota = HelperBinarySession.ByteObjeto(data) as Mascota;
-                ViewData["MASCOTA"] = mascota;
-            }
+            
             return View();
         }
 
@@ -71,6 +66,38 @@ namespace MvcCoreSession.Controllers
             return View();
         }
 
+        public IActionResult SessionMascotaJson(string accion)
+        {
+            if (accion != null)
+            {
+                if (accion.ToLower() == "almacenar")
+                {
+                    Mascota mascota = new Mascota
+                    {
+                        Nombre = "ZeusJson",
+                        Edad = 5,
+                        Raza = "Husky"
+                    };
+
+                    //Para almacenar la mascota en ssesion CONVERTIR A JSON
+                    string json = HelperJsonSession.SerializeObject<Mascota>(mascota);
+                    HttpContext.Session.SetString("MASCOTA_JSON", json);
+                    ViewData["MENSAJE"] = "Mascota almacenada en JSON";
+                }
+
+                else if (accion.ToLower() == "mostrar")
+                {
+                    string json = HttpContext.Session.GetString("MASCOTA_JSON");
+                    if (json != null)
+                    {
+                        Mascota? m = HelperJsonSession.DeserializeObject<Mascota>(json);
+                        ViewData["MASCOTA"] = m;
+                    }
+                }
+            } 
+            return View();
+        }
+
         public IActionResult SessionMascotaCollection(string accion)
         {
             if (accion != null)
@@ -90,7 +117,7 @@ namespace MvcCoreSession.Controllers
                 }
                 else if (string.Equals(accion, "mostrar", StringComparison.OrdinalIgnoreCase))
                 {
-                    byte[]? data = HttpContext.Session.Get("MASCOTAS");
+                    byte[] data = HttpContext.Session.Get("MASCOTAS");
                     if (data != null)
                     {
                         List<Mascota>? mascotas = HelperBinarySession.ByteObjeto(data) as List<Mascota>;
